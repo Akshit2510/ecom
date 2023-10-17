@@ -8,15 +8,25 @@ use App\Http\Requests\Register\RegisterUserRequest;
 use App\Http\Requests\Login\LoginUserRequest;
 use App\Interfaces\Registration\RegistrationRepositoryInterface;
 use App\Interfaces\ProductRepositoryInterface;
+use App\Interfaces\CartRepositoryInterface;
+use App\Interfaces\OrderRepositoryInterface;
 
 class MainController extends Controller
 {
     private RegistrationRepositoryInterface $registrationRepository;
     private ProductRepositoryInterface $productRepository;
-    public function __construct(RegistrationRepositoryInterface $registrationRepository,ProductRepositoryInterface $productRepository)
+    private CartRepositoryInterface $cartRepository;
+    private OrderRepositoryInterface $orderRepository;
+    public function __construct(
+        RegistrationRepositoryInterface $registrationRepository,
+        ProductRepositoryInterface $productRepository,
+        CartRepositoryInterface $cartRepository,
+        OrderRepositoryInterface $orderRepository)
     {
         $this->registrationRepository = $registrationRepository;
         $this->productRepository = $productRepository;
+        $this->cartRepository = $cartRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     public function index()
@@ -29,12 +39,22 @@ class MainController extends Controller
 
     public function cart()
     {
-        return view('cart');
+        $cartItems = $this->cartRepository->getCartItems();
+        return view('cart',compact('cartItems'));
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
-        return view('checkout');
+        if(session()->has('id'))
+        {
+            $orderItem = $this->orderRepository->orderItems($request);
+            if (isset($orderItem->id)) {
+                return redirect()->back()->withFlashSuccess('Congratulations! Your order has been placed successfully.');
+            }
+            return redirect()->back()->withFlashDanger('Failed to place your order! Please try again later.');
+        }else{
+            return redirect()->route('login')->withFlashDanger('Please Login to your account.');
+        }
     }
 
     public function shop()
@@ -83,5 +103,39 @@ class MainController extends Controller
         session()->forget('id');
         session()->forget('type');
         return redirect()->route('login')->withFlashSuccess('Logout successfully.');
+    }
+
+    public function addToCart(Request $request)
+    {
+        if(session()->has('id'))
+        {
+            $cart = $this->cartRepository->saveCartItems($request);
+            if (isset($cart->id)) {
+                return redirect()->back()->withFlashSuccess('Congratulations! Item added into cart.');
+            }
+            return redirect()->back()->withFlashDanger('Failed to add item! Please try again later.');
+        }else{
+            return redirect()->route('login')->withFlashDanger('Please Login to your account.');
+        }        
+    }
+
+    public function updateCartItem(Request $request)
+    {
+        if(session()->has('id'))
+        {
+            $cart = $this->cartRepository->updateCartItems($request);
+            if ($cart != 0) {
+                return redirect()->back()->withFlashSuccess('Congratulations! Item updated into cart.');
+            }
+            return redirect()->back()->withFlashDanger('Failed to update item! Please try again later.');
+        }else{
+            return redirect()->route('login')->withFlashDanger('Please Login to your account.');
+        }
+    }
+
+    public function deleteCartItem(string $id)
+    {
+        $cartItems = $this->cartRepository->deleteCartItem($id);
+        return redirect()->back()->withFlashSuccess('Item deleted from cart successfully.');
     }
 }

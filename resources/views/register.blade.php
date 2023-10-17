@@ -8,22 +8,22 @@
                 {!! Form::open(array('route' => 'register.user','role'=>"form",'enctype'=>'multipart/form-data')) !!}
                     <div class="form-group col-lg-12 {{ $errors->has('fullname') ? 'has-error' : ''}}">
                         {!! Html::decode(Form::label('fullname', 'Full Name ' .'<span class="text-danger">*</span> ')) !!}
-                        {!! Form::text('fullname',$country->fullname ?? null,array('class' => 'form-control','placeholder' => 'Enter Full Name')) !!}
+                        {!! Form::text('fullname',null,array('class' => 'form-control','placeholder' => 'Enter Full Name')) !!}
                         <span class="form-text text-muted">{!! $errors->first('fullname', '<p class="text-danger">:message</p>') !!}</span>
                     </div>
                     <div class="form-group col-lg-12 {{ $errors->has('email') ? 'has-error' : ''}}">
                         {!! Html::decode(Form::label('email', 'Email ' .'<span class="text-danger">*</span> ')) !!}
-                        {!! Form::text('email',$country->email ?? null,array('class' => 'form-control','placeholder' => 'Enter Email')) !!}
+                        {!! Form::text('email',null,array('class' => 'form-control','placeholder' => 'Enter Email')) !!}
                         <span class="form-text text-muted">{!! $errors->first('email', '<p class="text-danger">:message</p>') !!}</span>
                     </div>
                     <div class="form-group col-lg-12 {{ $errors->has('phone_no') ? 'has-error' : ''}}">
                         {!! Html::decode(Form::label('phone_no', 'Phone No ' .'<span class="text-danger">*</span> ')) !!}
-                        {!! Form::text('phone_no',$country->phone ?? null,array('class' => 'form-control','placeholder' => 'Enter Phone No')) !!}
+                        {!! Form::text('phone_no',null,array('class' => 'form-control','placeholder' => 'Enter Phone No')) !!}
                         <span class="form-text text-muted">{!! $errors->first('phone_no', '<p class="text-danger">:message</p>') !!}</span>
                     </div>
                     <div class="form-group col-lg-12 {{ $errors->has('file') ? 'has-error' : ''}}">
                         {!! Html::decode(Form::label('file', 'Profile Image ' .'<span class="text-danger">*</span> ')) !!}
-                        {!! Form::file('file',$country->file ?? null,array('class' => 'form-control')) !!}
+                        {!! Form::file('file',null,array('class' => 'form-control')) !!}
                         <span class="form-text text-muted">{!! $errors->first('file', '<p class="text-danger">:message</p>') !!}</span>
                     </div>
                     <div class="form-group col-lg-12 {{ $errors->has('password') ? 'has-error' : ''}}">

@@ -121,14 +121,13 @@
                                 </label>
                             </div>
                         </div>
-                        {!! Form::open(array('route' => 'login.user','role'=>"form")) !!}
+                        {!! Form::open(array('route' => 'addToCart','role'=>"form")) !!}
                         <div class="product__details__cart__option">
                             <div class="quantity">
-                                <div class="pro-qty">
-                                    <input type="number" min="1" max="{{ $product->quantity }}">
-                                </div>
+                                <input type="hidden" name="id" value="{{ $product->id }}">
+                                <input class="form-control" name="quantity" type="number" min="1" max="{{ $product->quantity }}" value="1">
                             </div>
-                            <a href="#" class="primary-btn">add to cart</a>
+                            <button type="submit" name="addToCart" class="primary-btn">add to cart</button>
                         </div>
                         {!! Form::close() !!}
                     </div>
